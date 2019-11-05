@@ -73,7 +73,7 @@ def split_by_patient(data, ratio=0.8, randomize=True):
         idx_test = np.array([e for e in np.arange(len(data)) if e not in idx_train])
     else:
         arr = np.arange(len(data))
-        idx_train = arr[bound:]
+        idx_train = arr[:bound]
         idx_test = arr[bound:]
 #     print(idx_train, idx_test)
 
