@@ -80,6 +80,7 @@ def split_by_patient(data, ratio=0.8, randomize=True):
     return data[idx_train], data[idx_test]
 
 
+
 if __name__ == '__main__':
 
     data = load()
