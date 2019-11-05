@@ -59,6 +59,25 @@ def preprocess(path):
                 tmse[i] = 29
     return data
 
+def split_by_patient(data, ratio=0.8, randomize=True):
+    
+    '''
+    This function will split data by ratio in range [0, 1] by choosing randomly, and then return 2 patient index numpy arrays.
+    ratio : a real number ranging between 0 and 1, to specify the ratio of the partition of train, test
+    randomize : if True, then splits the data randomly else, split by index
+    '''
+
+    bound = int(ratio*len(data))
+    if randomize:
+        idx_train = np.random.choice(len(data), bound , replace=False)
+        idx_test = np.array([e for e in np.arange(len(data)) if e not in idx_train])
+    else:
+        arr = np.arange(len(data))
+        idx_train = arr[bound:]
+        idx_test = arr[bound:]
+#     print(idx_train, idx_test)
+
+    return data[idx_train], data[idx_test]
 
 
 if __name__ == '__main__':
