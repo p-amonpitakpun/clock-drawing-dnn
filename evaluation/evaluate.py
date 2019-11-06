@@ -6,7 +6,7 @@ def evaluate(y_true, y_pred, verbose=False):
     '''
     This function return default 4 metrics
     '''
-
+    
     acc = accuracy_score(y_true, y_pred)
     rec = recall_score(y_true, y_pred)
     prec= precision_score(y_true, y_pred)
