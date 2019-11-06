@@ -79,6 +79,58 @@ def split_by_patient(data, ratio=0.8, randomize=True):
 
     return data[idx_train], data[idx_test]
 
+def get_age_gender_data(data, mode='diagnosis'):
+    #get shuffled data
+    data_train, data_test = split_by_patient(data)
+    
+    #label PD
+    y_test = data_test[mode].astype(np.float32)
+    y_train = data_train[mode].astype(np.float32)
+    
+    age_train = data_train['age'].astype(np.float32)
+    age_train = age_train.reshape(1, *age_train.shape).T
+    gender_train = data_train['gender'].astype(np.float32)
+    gender_train = gender_train.reshape(1, *gender_train.shape).T
+
+    age_test = data_test['age'].astype(np.float32)
+    age_test = age_test.reshape(1, *age_test.shape).T
+    gender_test = data_test['gender'].astype(np.float32)
+    gender_test = gender_test.reshape(1, *gender_test.shape).T
+    
+    #x
+    x_train = np.concatenate((age_train,gender_train),axis=1)
+    x_test = np.concatenate((age_test, gender_test), axis=1)
+    
+    return x_test, x_train, y_test, y_train
+
+
+def get_all_non_temporal_data(data, mode='diagnosis'):
+    #get shuffled data
+    data_train, data_test = split_by_patient(data)
+    
+    #label PD
+    y_test = data_test[mode].astype(np.float32)
+    y_train = data_train[mode].astype(np.float32)
+    
+    features = ['age', 'gender', 'ed', 'side', 'TMSE']
+    features_train, features_test = [], []
+    for f in features:
+        feature_train = data_train[f].astype(np.float32)
+        feature_train = feature_train.reshape(1, *data_train.shape).T
+        feature_test = data_test[f].astype(np.float32)
+        feature_test = feature_test.reshape(1, *data_test.shape).T
+        
+        features_train.append(feature_train)
+        features_test.append(feature_test)
+    #x
+    x_train = np.concatenate(features_train,axis=1)
+    x_test = np.concatenate(features_test , axis=1)
+    
+    return x_test, x_train, y_test, y_train
+
+
+
+
 
 
 if __name__ == '__main__':

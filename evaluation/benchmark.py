@@ -2,28 +2,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import *
 from .evaluate import evaluate
+import pickle as pkl  
 
 def run_benchmark(get_split_data,
               get_model,
               data,
               k=1, 
+              epochs=100,
               model_name='Model',
-              verbose=False,
+              verbose=0,
               figsize=(15,15)
              ):
     
     '''
     This function will run performance benchmark on the given model.
     Input:
-        get_split_data : function to return sampled test train data
+        get_split_data : function to return sampled test train data. It must reture x_test, x_train, y_test, y_train in this
+                        specified order.
         get_model : function to return a model to run benchmark on
         data : data numpy
         k : iteration to run the tests (higher k ~ better avg. value)
+        epochs : number of epochs in training loop
         model_name (default='Model') : Name for the model, used in plotting ROC Curves
-        verbose (default=False) : If true, then display benchmarking result/logs in each iteration
+        verbose (default=0) : If not zero, then display benchmarking result/logs in each iteration
         
     Output:
         models : list of models which were generated & trained during the benchmarking
+        plots : calculated plot data
+
     '''
     
     acc, rec, prec, f1 = [], [], [], []
@@ -40,7 +46,7 @@ def run_benchmark(get_split_data,
     
         #train & predict
         model = get_model()
-        model.fit(x_train, y_train, epochs=100,verbose=0)
+        model.fit(x_train, y_train, epochs=epochs,verbose=verbose)
         models.append(model) #store model
         y_pred = model.predict(x_test)
 
@@ -110,5 +116,15 @@ def run_benchmark(get_split_data,
     plt.legend()
     plt.show()
     
-    return models
 
+    plots = {'mean_tp':mean_tp, 'std_tp':std_tp, 'upper_tp':upper_tp, \
+            'lower_tp':lower_tp, 'mean_auc':mean_auc, 'domain':domain,
+    }
+
+    results = {'y_pred': y_pred}
+
+    return models, plots, results
+
+def save_log(path, log):
+    pass
+    # pkl.dump(os.path.join(path, log))
