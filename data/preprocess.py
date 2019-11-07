@@ -60,7 +60,7 @@ def preprocess(path):
     return data
 
 def split_by_patient(data, ratio=0.8, randomize=True):
-    
+
     '''
     This function will split data by ratio in range [0, 1] by choosing randomly, and then return 2 patient index numpy arrays.
     ratio : a real number ranging between 0 and 1, to specify the ratio of the partition of train, test
