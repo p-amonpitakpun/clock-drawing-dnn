@@ -46,7 +46,7 @@ def run_benchmark(get_split_data,
     
         #train & predict
         model = get_model(x_test.shape[1])
-        history = model.fit(x_train, y_train, epochs=epochs,verbose=verbose)
+        history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test),verbose=verbose)
         histories.append(history)
         models.append(model) #store model
         y_pred = model.predict(x_test)
