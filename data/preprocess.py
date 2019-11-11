@@ -139,6 +139,9 @@ def get_image(X, Y, w, h):
         x_int = int((x - x_min) * (w - 1) // (x_max - x_min))
         y_int = int((y_max - y) * (h - 1) // (y_max - y_min))
         img[y_int][x_int] = 1
+
+    #vertical flip to visualize better
+    img = img[::-1,:]
     return img
 
 
