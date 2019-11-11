@@ -129,11 +129,34 @@ def get_all_non_temporal_data(data, mode='diagnosis'):
     return x_test, x_train, y_test, y_train
 
 
+def get_image(X, Y, w, h):
+    x_min, x_max = min(X), max(X)
+    y_min, y_max = min(Y), max(Y)
+    
+    img = np.zeros((h, w))
+    print(type(img), img.shape)
+    for x, y in zip(X, Y):
+        x_int = int((x - x_min) * (w - 1) // (x_max - x_min))
+        y_int = int((y_max - y) * (h - 1) // (y_max - y_min))
+        img[y_int][x_int] = 1
+    return img
 
 
-
+# test get_image
+def test_get_image():
+    dat = preprocess('data\\raw\\CD_PD.mat')
+    X = dat[0]['x']
+    Y = dat[0]['y']
+    img = get_image(X, Y, 200, 200)
+    import cv2
+    cv2.imshow('', img)
+    cv2.waitKey()
+        
 
 if __name__ == '__main__':
 
     data = load()
     print(data.shape)
+
+    # test_get_image()
+    
