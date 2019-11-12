@@ -12,8 +12,8 @@ def plot_iter(x, y, data=None):
     y_max = np.max(y)
     y_min = np.min(y)
 
-    data_x = (x - x_min) / (x_max - x_min)
-    data_y = (y_max - y) / (y_max - y_min)
+    data_x = x - x_min
+    data_y = y_max - y
 
     tmse = data[person]['TMSE']
     ed = data[person]['ed']
@@ -36,8 +36,8 @@ def plot_iter(x, y, data=None):
     ax = fig.add_subplot(111)
     ax.set_title('gender:{},side{},age:{},ed:{},TMSE:{}\ndiagnosis:{},clock_drawing:{},duration:{}'.format(gender,age,ed,side,tmse,diagnosis,clock_drawing,duration))
     l  = ax.scatter([],[], c='r', s=1)
-    ax.set_ylim(0,1)
-    ax.set_xlim(0, 1)
+    ax.set_ylim(0, y_max - y_min)
+    ax.set_xlim(0, x_max - x_min)
 
     def update(i):
 
@@ -47,8 +47,14 @@ def plot_iter(x, y, data=None):
         l.set_offsets(np.append(X.reshape((-1, 1)), Y.reshape((-1, 1)), axis=1))
         return l, 
 
-    animation.FuncAnimation(fig, update, frames=n_frame, interval=10, blit=True, repeat=False)
+    line_ani = animation.FuncAnimation(fig, update, frames=n_frame, interval=10, blit=True, repeat=False)
     plt.show()
+
+    try:
+        writer = animation.FFMpegWriter(fps=60, metadata=dict(artist='Me'), bitrate=1800)
+        return line_ani, writer
+    except:
+        return line_ani, None
 
 
 if __name__ == '__main__':
@@ -68,5 +74,12 @@ if __name__ == '__main__':
     t = data[person]['t']
     print('candidate number =', person)
 
-    plot_iter(x, y, data)
+    line_ani, writer = plot_iter(x, y, data)
+    try:
+        print('saving the video.')
+        line_ani.save('data\\vdo\\clock' + str(person) + '.mp4', writer=writer)
+        print('video saved.')
+    except Exception as err:
+        print('save file unable :', err)
+        pass
 
