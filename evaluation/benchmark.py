@@ -38,15 +38,16 @@ def run_benchmark(get_split_data,
     domain = np.linspace(0, 1, 100)
     aucs = []
     models = []
-    
+    histories = []
     for i in range(k):
         if verbose:
             print('ITER:',i)
         x_test, x_train, y_test, y_train = get_split_data(data) #data should randomly shuffle
     
         #train & predict
-        model = get_model()
-        model.fit(x_train, y_train, epochs=epochs,verbose=verbose)
+        model = get_model(x_test.shape[1])
+        history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test),verbose=verbose)
+        histories.append(history)
         models.append(model) #store model
         y_pred = model.predict(x_test)
 
@@ -121,7 +122,7 @@ def run_benchmark(get_split_data,
             'lower_tp':lower_tp, 'mean_auc':mean_auc, 'domain':domain,
     }
 
-    results = {'y_pred': y_pred}
+    results = {'y_pred': y_pred, 'histories':histories}
 
     return models, plots, results
 

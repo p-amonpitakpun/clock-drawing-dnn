@@ -46,6 +46,9 @@ def preprocess(path):
     9 - 12 ปีอาจใช้เกณฑ์ 27 คะแนน
     ระดับอุดมศึกษา อาจใช้เกณฑ์ 29 คะแนน
     '''
+    diagnosis = data['diagnosis']
+    for i in range(len(diagnosis)):
+        diagnosis[i] = 1-diagnosis[i]
     tmse = data['TMSE']
     for i in range(len(tmse)):
         if tmse[i] == 0:
@@ -60,7 +63,7 @@ def preprocess(path):
     return data
 
 def split_by_patient(data, ratio=0.8, randomize=True):
-    
+
     '''
     This function will split data by ratio in range [0, 1] by choosing randomly, and then return 2 patient index numpy arrays.
     ratio : a real number ranging between 0 and 1, to specify the ratio of the partition of train, test
@@ -139,8 +142,21 @@ def get_image(X, Y, w, h):
         x_int = int((x - x_min) * (w - 1) // (x_max - x_min))
         y_int = int((y_max - y) * (h - 1) // (y_max - y_min))
         img[y_int][x_int] = 1
+
+    #vertical flip to visualize better
+    img = img[::-1,:]
     return img
 
+# test get_image
+def test_get_image():
+    dat = preprocess('data\\raw\\CD_PD.mat')
+    X = dat[0]['x']
+    Y = dat[0]['y']
+    img = get_image(X, Y, 200, 200)
+    import cv2
+    cv2.imshow('', img)
+    cv2.waitKey()
+        
 
 # test get_image
 def test_get_image():
