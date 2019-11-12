@@ -46,6 +46,9 @@ def preprocess(path):
     9 - 12 ปีอาจใช้เกณฑ์ 27 คะแนน
     ระดับอุดมศึกษา อาจใช้เกณฑ์ 29 คะแนน
     '''
+    diagnosis = data['diagnosis']
+    for i in range(len(diagnosis)):
+        diagnosis[i] = 1-diagnosis[i]
     tmse = data['TMSE']
     for i in range(len(tmse)):
         if tmse[i] == 0:

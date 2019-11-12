@@ -22,7 +22,7 @@ def plot_iter(x, y, data=None):
     duration = data[person]['duration']
     diagnosis = data[person]['diagnosis']
     clock_drawing = data[person]['clock_drawing']
-
+    age = data[person]['age']
     # error check
     if data_x.shape != data_y.shape:
         print('both input data must have the same shape!')
@@ -34,7 +34,7 @@ def plot_iter(x, y, data=None):
     # prepare a plotting figure
     fig = plt.figure(figsize=(6,6))
     ax = fig.add_subplot(111)
-    ax.set_title('gender:{},side{},ed:{},TMSE:{}\ndiagnosis:{},clock_drawing:{},duration:{}'.format(gender,ed,side,tmse,diagnosis,clock_drawing,duration))
+    ax.set_title('gender:{},side{},age:{},ed:{},TMSE:{}\ndiagnosis:{},clock_drawing:{},duration:{}'.format(gender,age,ed,side,tmse,diagnosis,clock_drawing,duration))
     l  = ax.scatter([],[], c='r', s=1)
     ax.set_ylim(0,1)
     ax.set_xlim(0, 1)
