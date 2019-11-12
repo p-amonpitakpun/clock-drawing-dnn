@@ -131,6 +131,6 @@ venv.bak/
 .mypy_cache/
 
 # video
-.mp4
+*.mp4
 
 activate_lab.ps1
