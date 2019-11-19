@@ -132,19 +132,48 @@ def get_all_non_temporal_data(data, mode='diagnosis'):
     return x_test, x_train, y_test, y_train
 
 
-def get_image(X, Y, w, h):
+def get_image(X, Y, shape=(100, 100)):
+    
+    try:
+        h, w = shape
+    except:
+        raise Exception('error : get_image() -> an argument shape must be (h, w).')
+    
     x_min, x_max = min(X), max(X)
     y_min, y_max = min(Y), max(Y)
+    delta_x = x_max - x_min
+    delta_y = y_max - y_min
+    ratio_xy = delta_x / delta_y
+    ratio_wh = w / h
     
+    scale = 1
+    dx, dy = 0, 0
+    
+    if ratio_xy > ratio_wh:
+        s = (w - 1) / delta_x
+        dy = int((h / 2) - (delta_y * s / 2))
+    else:
+        s = (h - 1) / delta_y
+        dx = int((w /2 ) - (delta_x * s / 2))
+    
+#     print('1', type(scale), type(dx), type(dy))
     img = np.zeros((h, w))
-    print(type(img), img.shape)
+#     print(type(img), img.shape)
     for x, y in zip(X, Y):
-        x_int = int((x - x_min) * (w - 1) // (x_max - x_min))
-        y_int = int((y_max - y) * (h - 1) // (y_max - y_min))
-        img[y_int][x_int] = 1
+        x0 = x - x_min
+        y0 = y - y_min
+        x_int = int(x0 * s + dx)
+        y_int = int(y0 * s + dy)
+#         print('0', type(x_int), type(y_int))
+        try:
+            img[y_int][x_int] = 1
+        except IndexError:
+            index_str = f'\n\tshape {shape} index {(y_int, x_int)}'
+            scale_str = f' \n\twith scale {s} delta {(dx, dy)}'
+            raise IndexError(f'error: get_image -> index out of bound' + index_str + scale_str)
 
-    #vertical flip to visualize better
-    img = img[::-1,:]
+#     vertical flip to visualize better
+#     img = img[::-1,:]
     return img
 
 # test get_image
