@@ -21,7 +21,7 @@ def run_benchmark(get_split_data,
                         specified order.
         get_model : function to return a model to run benchmark on
         data : data numpy
-        k : iteration to run the tests (higher k ~ better avg. value)
+        k : iteration to run the tests (higher k ~ more accurate to expected representation)
         epochs : number of epochs in training loop
         model_name (default='Model') : Name for the model, used in plotting ROC Curves
         verbose (default=0) : If not zero, then display benchmarking result/logs in each iteration
