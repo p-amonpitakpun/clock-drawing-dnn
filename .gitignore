@@ -134,3 +134,6 @@ venv.bak/
 *.mp4
 
 activate_lab.ps1
+
+#mac hidden files
+.DS_Store
