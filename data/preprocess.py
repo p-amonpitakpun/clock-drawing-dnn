@@ -185,20 +185,23 @@ def test_get_image():
     import cv2
     cv2.imshow('', img)
     cv2.waitKey()
-        
-# get_components
-# preprocess.get_components() function is used to extract components from each record in data. 
-# the return value is a list of records where each record is  a list of components.
-#
-#                         ret = [D1, D2, ..., Dn]
-#                          Di = [A1, A2, ..., Am]
-#                          Aj = [X, Y, T, P, Pt]
+    
 def get_components(data):
+    '''        
+    preprocess.get_components() function is used to extract components from each record in data
+    argument:
+    - data : data returned from preprocess.preprocess
+    return:
+    - records : a list of records where each record is  a list of components.
+    
+                            records = [D1, D2, ..., Dn]
+                                 Di = [A1, A2, ..., Am]
+                                 Aj = [X, Y, T, P, Pt]
+    '''
     m = len(data)
     records = []
     for i in range(m):
         record = data[i]
-        # new obj
         obj_list = []
         obj_x = []
         obj_y = []
