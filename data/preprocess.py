@@ -131,7 +131,7 @@ def get_all_non_temporal_data(data, mode='diagnosis'):
     
     return x_test, x_train, y_test, y_train
 
-
+# get a 2D Array represents an image from points
 def get_image(X, Y, shape=(100, 100)):
     
     try:
@@ -186,18 +186,42 @@ def test_get_image():
     cv2.imshow('', img)
     cv2.waitKey()
         
-
-# test get_image
-def test_get_image():
-    dat = preprocess('data\\raw\\CD_PD.mat')
-    X = dat[0]['x']
-    Y = dat[0]['y']
-    img = get_image(X, Y, 200, 200)
-    import cv2
-    cv2.imshow('', img)
-    cv2.waitKey()
-        
-
+# get_components
+# preprocess.get_components() function is used to extract components from each record in data. 
+# the return value is a list of records where each record is  a list of components.
+#
+#                         ret = [D1, D2, ..., Dn]
+#                          Di = [A1, A2, ..., Am]
+#                          Aj = [X, Y, T, P, Pt]
+def get_components(data):
+    m = len(data)
+    records = []
+    for i in range(m):
+        record = data[i]
+        # new obj
+        obj_list = []
+        obj_x = []
+        obj_y = []
+        obj_t = []
+        obj_p = []
+        obj_pt = []
+        n = record['t'].shape[0]
+        for i in range(n):
+            obj_x.append(record['x'][i])
+            obj_y.append(record['y'][i])
+            obj_t.append(record['t'][i])
+            obj_p.append(record['p'][i])
+            obj_pt.append(record['pt'][i])
+            if record['pt'][i] == 3:
+                obj_list.append((obj_x, obj_y, obj_t, obj_p, obj_pt))
+                obj_x = []
+                obj_y = []
+                obj_t = []
+                obj_p = []
+                obj_pt = []
+        records.append(obj_list)
+    return records
+                
 if __name__ == '__main__':
 
     data = load()
