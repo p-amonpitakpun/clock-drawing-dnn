@@ -224,6 +224,29 @@ def get_components(data):
                 obj_pt = []
         records.append(obj_list)
     return records
+
+def get_velocity(records):
+    '''
+    velocity between 2 consecutive points in 1 components
+    '''
+    vel_record = []
+    for record in records:
+        vel = []
+        for obj in record:
+            X = obj[0]
+            Y = obj[1]
+            T = obj[2]
+            N = len(T)
+            for i in range(N - 1):
+                if T[i + 1] - T[i] != 0:
+                    dx = X[i + 1] - X[i]
+                    dy = Y[i + 1] - Y[i]
+                    ds = np.sqrt(dx**2 + dy**2)
+                    dt = T[i + 1] - T[i]
+                    v = [ds / dt, dt]
+                    vel.append(v)
+        vel_record.append(np.array(vel))
+    return vel_record
                 
 if __name__ == '__main__':
 
