@@ -131,7 +131,7 @@ def get_all_non_temporal_data(data, mode='diagnosis'):
     
     return x_test, x_train, y_test, y_train
 
-
+# get a 2D Array represents an image from points
 def get_image(X, Y, shape=(100, 100)):
     
     try:
@@ -185,19 +185,69 @@ def test_get_image():
     import cv2
     cv2.imshow('', img)
     cv2.waitKey()
-        
+    
+def get_components(data):
+    '''        
+    preprocess.get_components() function is used to extract components from each record in data
+    argument:
+    - data : data returned from preprocess.preprocess
+    return:
+    - records : a list of records where each record is  a list of components.
+    
+                            records = [D1, D2, ..., Dn]
+                                 Di = [A1, A2, ..., Am]
+                                 Aj = [X, Y, T, P, Pt]
+    '''
+    m = len(data)
+    records = []
+    for i in range(m):
+        record = data[i]
+        obj_list = []
+        obj_x = []
+        obj_y = []
+        obj_t = []
+        obj_p = []
+        obj_pt = []
+        n = record['t'].shape[0]
+        for i in range(n):
+            obj_x.append(record['x'][i])
+            obj_y.append(record['y'][i])
+            obj_t.append(record['t'][i])
+            obj_p.append(record['p'][i])
+            obj_pt.append(record['pt'][i])
+            if record['pt'][i] == 3:
+                obj_list.append((obj_x, obj_y, obj_t, obj_p, obj_pt))
+                obj_x = []
+                obj_y = []
+                obj_t = []
+                obj_p = []
+                obj_pt = []
+        records.append(obj_list)
+    return records
 
-# test get_image
-def test_get_image():
-    dat = preprocess('data\\raw\\CD_PD.mat')
-    X = dat[0]['x']
-    Y = dat[0]['y']
-    img = get_image(X, Y, 200, 200)
-    import cv2
-    cv2.imshow('', img)
-    cv2.waitKey()
-        
-
+def get_velocity(records):
+    '''
+    velocity between 2 consecutive points in 1 components
+    '''
+    vel_record = []
+    for record in records:
+        vel = []
+        for obj in record:
+            X = obj[0]
+            Y = obj[1]
+            T = obj[2]
+            N = len(T)
+            for i in range(N - 1):
+                if T[i + 1] - T[i] != 0:
+                    dx = X[i + 1] - X[i]
+                    dy = Y[i + 1] - Y[i]
+                    ds = np.sqrt(dx**2 + dy**2)
+                    dt = T[i + 1] - T[i]
+                    v = [ds / dt, dt]
+                    vel.append(v)
+        vel_record.append(np.array(vel))
+    return vel_record
+                
 if __name__ == '__main__':
 
     data = load()
