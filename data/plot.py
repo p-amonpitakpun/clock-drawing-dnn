@@ -34,7 +34,7 @@ def plot_iter(x, y, data=None):
     # prepare a plotting figure
     fig = plt.figure(figsize=(6,6))
     ax = fig.add_subplot(111)
-    ax.set_title('gender:{},side{},age:{},ed:{},TMSE:{}\ndiagnosis:{},clock_drawing:{},duration:{}'.format(gender,age,ed,side,tmse,diagnosis,clock_drawing,duration))
+    ax.set_title('gender:{},side{},age:{},ed:{},TMSE:{}\ndiagnosis:{},clock_drawing:{},duration:{}'.format(gender,side,age,ed,tmse,diagnosis,clock_drawing,duration))
     l  = ax.scatter([],[], c='r', s=1)
     ax.set_ylim(0, y_max - y_min)
     ax.set_xlim(0, x_max - x_min)
@@ -61,7 +61,8 @@ if __name__ == '__main__':
 
     argv = sys.argv
 
-    data = preprocess.load()
+    # data = preprocess.load()
+    data = preprocess.preprocess(path='data/raw/CD_PD.mat')
     max_person = data.shape[0]
 
     try:
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     line_ani, writer = plot_iter(x, y, data)
     try:
         print('saving the video.')
-        line_ani.save('data\\vdo\\clock' + str(person) + '.mp4', writer=writer)
+        # line_ani.save('data\\vdo\\clock' + str(person) + '.mp4', writer=writer)
         print('video saved.')
     except Exception as err:
         print('save file unable :', err)
